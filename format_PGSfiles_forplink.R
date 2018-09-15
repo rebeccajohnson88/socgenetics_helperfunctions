@@ -30,9 +30,14 @@ format_PGSfiles_forplink <- function(df_allinfo,
                                      nameof_phenotype,
                                      dirname_storeoutput){
   
-  
+  ## preprocess data to capitalize ref alleles column
+  data_cleaned = as.data.table(df_allinfo)
+  data_cleaned[, nameof_refallelecol] = sapply(data_cleaned[, .SD, 
+                                                            .SDcols = nameof_refallelecol], 
+                                               toupper) 
+
   ## first create and write snp file
-  snp_df = as.data.table(df_allinfo)[, .SD, .SDcols = nameof_SNPcol]
+  snp_df = data_cleaned[, .SD, .SDcols = nameof_SNPcol]
   file_plus_dir = sprintf("%s%s", 
                           dirname_storeoutput,
                           sprintf("%s_%s", nameof_phenotype,
@@ -44,7 +49,9 @@ format_PGSfiles_forplink <- function(df_allinfo,
   print('wrote SNP list to directory')
   
   ## then create and write snp + allele file
-  snpallele_df = as.data.table(df_allinfo)[, .SD, .SDcols = c(nameof_SNPcol,nameof_refallelecol)]
+  ## has step to convert all reference alleles to uppercase
+  snpallele_df = data_cleaned[, .SD, .SDcols = c(nameof_SNPcol,nameof_refallelecol)]
+  
   file_plus_dir = sprintf("%s%s", 
                           dirname_storeoutput,
                           sprintf("%s_%s", nameof_phenotype,
@@ -56,9 +63,9 @@ format_PGSfiles_forplink <- function(df_allinfo,
   print('wrote SNP + ref alleles to directory')
   
   ## finally, create and write snp+ allele + weights files
-  snpweights_df = as.data.table(df_allinfo)[, .SD, .SDcols = c(nameof_SNPcol,
-                                                               nameof_refallelecol,
-                                                               nameof_effectsizecol)]
+  snpweights_df = data_cleaned[, .SD, .SDcols = c(nameof_SNPcol,
+                                                  nameof_refallelecol,
+                                                  nameof_effectsizecol)]
   file_plus_dir = sprintf("%s%s", 
                           dirname_storeoutput,
                           sprintf("%s_%s", nameof_phenotype,
@@ -70,12 +77,8 @@ format_PGSfiles_forplink <- function(df_allinfo,
   print('wrote SNP + ref alleles + weights to directory')
 }
 
-## example application:
-## nameof_SNPcol = 'MarkerName'
-## nameof_refallelecol = 'Allele1'
-## nameof_effectsizecol = 'b'
-## nameof_phenotype = 'varheight'
 
+## example application:
 ## create_PGS_files(df_allinfo = height_weights_data,
 ## nameof_SNPcol = 'MarkerName',
 ## nameof_refallelecol = 'Allele1',
