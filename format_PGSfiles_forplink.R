@@ -70,11 +70,11 @@ format_PGSfiles_forplink <- function(df_allinfo,
   print('wrote SNP + ref alleles + weights to directory')
 }
 
-## example application
-nameof_SNPcol = 'MarkerName'
-nameof_refallelecol = 'Allele1'
-nameof_effectsizecol = 'b'
-nameof_phenotype = 'varheight'
+## example application:
+## nameof_SNPcol = 'MarkerName'
+## nameof_refallelecol = 'Allele1'
+## nameof_effectsizecol = 'b'
+## nameof_phenotype = 'varheight'
 
 ## create_PGS_files(df_allinfo = height_weights_data,
 ## nameof_SNPcol = 'MarkerName',
